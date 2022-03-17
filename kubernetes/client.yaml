@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-go-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grpc-go-client
+  template:
+    metadata:
+      labels:
+        app: grpc-go-client
+    spec:
+      containers:
+        - name: grpc-go-client
+          image: dockerhub.com/rahilr/grpc-go-client:v0.0.6
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
