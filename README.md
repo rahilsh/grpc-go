@@ -1,36 +1,49 @@
 # grpc-go
 Sample grpc server and client using golang
 
-### Generate server and client code using the protocol buffer compiler
-Install protobuf
+Quick start - https://grpc.io/docs/languages/go/quickstart/
 
+### Install protobuf
+
+#### Linux
+
+```shell
+apt install -y protobuf-compiler
+protoc --version  # Ensure compiler version is 3+
+```
+
+#### Mac
 ```shell
 brew install protobuf
 ```
 
-Generate code
+### Install the protocol compiler plugins for Go
+
+```shell
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+```
+
+### Update your PATH so that the protoc compiler can find the plugins
+```shell
+export PATH="$PATH:$(go env GOPATH)/bin"
+```
+
+### Generate code
 ```shell
 protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative proto/hello.proto
 ```
 
-### Test locally
-Build client
+## Test locally
+
+Run server
 ```shell
-go build -o ./bin/client src/client.go
+go run src/server.go
 ```
 
-Build server
+On another terminal make gRPC call using client
 ```shell
-go build -o ./bin/server src/server.go
-```
-
-Start server using below command
-```shell
-./bin/server
-```
-On another terminal run client
-```
-./bin/client -host localhost:5050
+go run src/client.go -host localhost:5050
 ```
 
 ### Build images 
