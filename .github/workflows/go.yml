@@ -23,7 +23,10 @@ jobs:
         
     - name: Install Linux dependencies
       if: runner.os == 'Linux'
-      run: sudo apt-get -y protobuf-compiler
+      run: |
+        sudo apt update
+        sudo apt upgrade
+        sudo apt -y protobuf-compiler
     
     - name: Installing protoc-gen-go
       run: |
