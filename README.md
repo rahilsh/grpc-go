@@ -8,7 +8,9 @@ Quick start - https://grpc.io/docs/languages/go/quickstart/
 #### Linux
 
 ```shell
-apt install -y protobuf-compiler
+sudo apt update
+sudo apt -y upgrade
+sudo apt install -y protobuf-compiler
 protoc --version  # Ensure compiler version is 3+
 ```
 
