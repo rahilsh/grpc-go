@@ -2,7 +2,7 @@ module rahilsh/grpc-go
 
 go 1.20
 
-require google.golang.org/grpc v1.58.2
+require google.golang.org/grpc v1.58.3
 
 require (
 	github.com/golang/protobuf v1.5.3 // indirect
