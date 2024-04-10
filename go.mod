@@ -2,7 +2,7 @@ module rahilsh/grpc-go
 
 go 1.20
 
-require google.golang.org/grpc v1.63.0
+require google.golang.org/grpc v1.63.2
 
 require (
 	golang.org/x/net v0.21.0 // indirect
