@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"log"
 	"os"
-	pb "rahilsh/grpc-go/proto"
+	pb "github.com/rahilsh/grpc-go/proto"
 	"time"
 )
 
