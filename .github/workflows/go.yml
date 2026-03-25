@@ -25,4 +25,4 @@ jobs:
       run: go build -v src/client.go
 
     - name: Build Server
-      run: go test -v src/server.go
+      run: go build -v src/server.go
