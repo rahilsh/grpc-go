@@ -8,7 +8,7 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
-	pb "github.com/rahilsh/grpc-go/proto"
+	pb "rahilsh/grpc-go/proto"
 )
 
 const (
