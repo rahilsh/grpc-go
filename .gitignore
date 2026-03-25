@@ -17,4 +17,3 @@
 .idea
 bin
 .DS_Store
-*.pb.go
