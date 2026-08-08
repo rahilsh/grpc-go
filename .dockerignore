@@ -1,6 +1,9 @@
 .git
 .github
 .idea
-bin
+.DS_Store
+**/bin
+**/*.out
+**/*.test
 *.md
 LICENSE

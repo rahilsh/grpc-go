@@ -18,7 +18,7 @@
 // - protoc             v7.34.1
 // source: proto/hello.proto
 
-package helloworld
+package greeterpb
 
 import (
 	context "context"

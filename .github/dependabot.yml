@@ -14,11 +14,16 @@ updates:
       interval: weekly
 
   - package-ecosystem: docker
-    directory: /docker/client
+    directory: /deploy/http
     schedule:
       interval: weekly
 
   - package-ecosystem: docker
-    directory: /docker/server
+    directory: /deploy/grpc/docker/client
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker
+    directory: /deploy/grpc/docker/server
     schedule:
       interval: weekly

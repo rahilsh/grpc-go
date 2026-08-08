@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: grpc-go-server
-          image: grpc-go-server:local
+          image: grpc-server:local
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5050

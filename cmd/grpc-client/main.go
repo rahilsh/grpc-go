@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	pb "github.com/rahilsh/grpc-go/proto"
+	pb "github.com/rahilsh/golang-lab/internal/greeterpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
@@ -23,7 +23,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("create client: %v", err)
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
