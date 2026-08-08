@@ -1,7 +1,7 @@
 # Build from the repository root:
 #   docker build -t grpc-server:local -f deploy/grpc/docker/server/Dockerfile .
 
-FROM golang:1.25-bookworm AS builder
+FROM golang:1.26-bookworm AS builder
 
 WORKDIR /src
 COPY go.mod go.sum ./
