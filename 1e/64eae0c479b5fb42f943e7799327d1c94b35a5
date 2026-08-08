@@ -1,0 +1,81 @@
+internal/httpserver/server.go
+  s_2a8d822ff19eb0::t_fef478686efde4 1-131
+.github/dependabot.yml
+  s_2a8d822ff19eb0::t_fef478686efde4 17,22-27
+.golangci.yml
+  s_2a8d822ff19eb0::t_fef478686efde4 1-26
+README.md
+  s_2a8d822ff19eb0::t_fef478686efde4 1,3,6-29,31,34-35,38,41-44,47-50,52,55-56,59-62,64-65,71,74,76,79-81,84-86,89-93,96,99-101,105,109-111,115-118
+Makefile
+  s_2a8d822ff19eb0::t_fef478686efde4 1-53
+cmd/grpc-server/main.go
+  s_2a8d822ff19eb0::t_fef478686efde4 1-29
+.github/workflows/codeql.yml
+  s_2a8d822ff19eb0::t_fef478686efde4 1-39
+deploy/http/Dockerfile
+  s_2a8d822ff19eb0::t_fef478686efde4 1-24
+cmd/http-server/main.go
+  s_2a8d822ff19eb0::t_fef478686efde4 1-34
+SECURITY.md
+  s_2a8d822ff19eb0::t_fef478686efde4 5-6,11,15-16,18
+deploy/grpc/docker/server/Dockerfile
+  s_2a8d822ff19eb0::t_fef478686efde4 1-16
+.github/workflows/ci.yml
+  s_2a8d822ff19eb0::t_fef478686efde4 1-77
+.dockerignore
+  s_2a8d822ff19eb0::t_fef478686efde4 4-7
+.github/ISSUE_TEMPLATE/feature_request.yml
+  s_2a8d822ff19eb0::t_fef478686efde4 1-36
+.gitignore
+  s_2a8d822ff19eb0::t_fef478686efde4 2-3,13
+internal/httpserver/server_test.go
+  s_2a8d822ff19eb0::t_fef478686efde4 1-88
+deploy/grpc/kubernetes/client.yaml
+  s_2a8d822ff19eb0::t_fef478686efde4 1-24
+SUPPORT.md
+  s_2a8d822ff19eb0::t_fef478686efde4 3-4,7
+cmd/http-client/main.go
+  s_2a8d822ff19eb0::t_fef478686efde4 1-56
+cmd/grpc-client/main.go
+  s_2a8d822ff19eb0::t_fef478686efde4 1-39
+CONTRIBUTING.md
+  s_2a8d822ff19eb0::t_fef478686efde4 3,6-9,16,24,27-28,36-37
+go.mod
+  s_2a8d822ff19eb0::t_fef478686efde4 1,3
+internal/greeter/server_test.go
+  s_2a8d822ff19eb0::t_fef478686efde4 7
+internal/greeter/server.go
+  s_2a8d822ff19eb0::t_fef478686efde4 8
+.github/ISSUE_TEMPLATE/config.yml
+  s_2a8d822ff19eb0::t_fef478686efde4 4
+deploy/grpc/kubernetes/server-headless-svc.yaml
+  s_2a8d822ff19eb0::t_fef478686efde4 1-15
+proto/hello.proto
+  s_2a8d822ff19eb0::t_fef478686efde4 17
+deploy/grpc/kubernetes/server.yaml
+  s_2a8d822ff19eb0::t_fef478686efde4 1-27
+deploy/grpc/docker/client/Dockerfile
+  s_2a8d822ff19eb0::t_fef478686efde4 1-15
+deploy/grpc/kubernetes/server-svc.yaml
+  s_2a8d822ff19eb0::t_fef478686efde4 1-14
+internal/greeterpb/hello.pb.go
+  s_2a8d822ff19eb0::t_b65e2fc6b29d6a 21,140-141
+internal/greeterpb/hello_grpc.pb.go
+  s_2a8d822ff19eb0::t_ba078a24a437ac 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "1e64eae0c479b5fb42f943e7799327d1c94b35a5",
+  "prompts": {},
+  "sessions": {
+    "s_2a8d822ff19eb0": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_01e8dd38affeS6F49Ud5eFLvvW",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Rahil Shaikh <rahilrshk@gmail.com>"
+    }
+  }
+}
