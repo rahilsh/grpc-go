@@ -1,20 +1,19 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: grpc-go-client
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: grpc-go-client
   template:
     metadata:
       labels:
         app: grpc-go-client
     spec:
+      restartPolicy: Never
       containers:
         - name: grpc-go-client
-          image: dockerhub.com/rahilr/grpc-go-client:v0.0.6
+          image: grpc-go-client:local
+          imagePullPolicy: IfNotPresent
+          args: ["-host", "grpc-go-server-svc:5050"]
           resources:
             limits:
               cpu: 100m
@@ -22,3 +21,4 @@ spec:
             requests:
               cpu: 100m
               memory: 100Mi
+  backoffLimit: 3

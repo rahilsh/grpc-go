@@ -1,27 +1,15 @@
-FROM golang:1.16 as builder
+FROM golang:1.25-bookworm AS builder
 
-# Retrieve the dependencies.
-RUN go get google.golang.org/grpc
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY cmd/server ./cmd/server
+COPY internal ./internal
+COPY proto ./proto
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /server ./cmd/server
 
-# Copy local code to the container image.
-WORKDIR /workdir
-COPY . ./
-
-# Build the command inside the container.
-# To facilitate gRPC testing, this container includes a client command.
-
-RUN CGO_ENABLED=0 go build -tags=grpc-go -o ./server src/server.go
-RUN CGO_ENABLED=0 go build -tags=grpc-go -o ./client src/client.go
-
-# Use a Docker multi-stage build to create a lean production image.
-# https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
-FROM busybox
-
-# Copy the binaries to the production image from the builder stage.
-COPY --from=builder /workdir/server /server
-COPY --from=builder /workdir/client /client
-
+FROM scratch
+COPY --from=builder /server /server
+USER 65532:65532
 EXPOSE 5050
-
-# Run the service on container startup.
-CMD ["/server"]
+ENTRYPOINT ["/server"]
