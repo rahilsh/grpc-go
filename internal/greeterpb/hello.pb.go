@@ -18,7 +18,7 @@
 // 	protoc        v7.34.1
 // source: proto/hello.proto
 
-package helloworld
+package greeterpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -137,8 +137,8 @@ const file_proto_hello_proto_rawDesc = "" +
 	"HelloReply\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage2I\n" +
 	"\aGreeter\x12>\n" +
-	"\bSayHello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x00B]\n" +
-	"\x1bio.grpc.examples.helloworldB\x0fHelloWorldProtoP\x01Z+github.com/rahilsh/grpc-go/proto;helloworldb\x06proto3"
+	"\bSayHello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x00Bl\n" +
+	"\x1bio.grpc.examples.helloworldB\x0fHelloWorldProtoP\x01Z:github.com/rahilsh/golang-lab/internal/greeterpb;greeterpbb\x06proto3"
 
 var (
 	file_proto_hello_proto_rawDescOnce sync.Once

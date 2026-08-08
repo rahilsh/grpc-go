@@ -6,8 +6,8 @@ import (
 	"log"
 	"net"
 
-	"github.com/rahilsh/grpc-go/internal/greeter"
-	pb "github.com/rahilsh/grpc-go/proto"
+	"github.com/rahilsh/golang-lab/internal/greeter"
+	pb "github.com/rahilsh/golang-lab/internal/greeterpb"
 	"google.golang.org/grpc"
 )
 

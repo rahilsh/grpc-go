@@ -5,7 +5,7 @@ import (
 	"context"
 	"log"
 
-	pb "github.com/rahilsh/grpc-go/proto"
+	pb "github.com/rahilsh/golang-lab/internal/greeterpb"
 	"google.golang.org/grpc/metadata"
 )
 

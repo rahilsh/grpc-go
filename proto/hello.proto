@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-option go_package = "github.com/rahilsh/grpc-go/proto;helloworld";
+option go_package = "github.com/rahilsh/golang-lab/internal/greeterpb;greeterpb";
 option java_multiple_files = true;
 option java_package = "io.grpc.examples.helloworld";
 option java_outer_classname = "HelloWorldProto";
