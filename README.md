@@ -1,119 +1,111 @@
-# grpc-go
-Sample grpc server and client using golang
+# gRPC Go Hello World
 
-Quick start - https://grpc.io/docs/languages/go/quickstart/
+[![Go](https://github.com/rahilsh/grpc-go/actions/workflows/go.yml/badge.svg)](https://github.com/rahilsh/grpc-go/actions/workflows/go.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-### Install protobuf
+A small gRPC client and server written in Go, with Docker and Kubernetes examples.
 
-#### Linux
+> [!NOTE]
+> This is an unofficial learning project, not the official
+> [`grpc/grpc-go`](https://github.com/grpc/grpc-go) repository. It uses plaintext
+> transport for local demonstration and is not a production-ready service.
 
-```shell
-sudo apt update
-sudo apt -y upgrade
-sudo apt install -y protobuf-compiler
-protoc --version  # Ensure compiler version is 3+
+## Requirements
+
+- Go 1.25 or later
+- Docker (optional)
+- `kubectl` and a local cluster such as [kind](https://kind.sigs.k8s.io/) (optional)
+- `protoc` and its Go plugins, only when changing `proto/hello.proto`
+
+## Run Locally
+
+Start the server:
+
+```sh
+go run ./cmd/server
 ```
 
-#### Mac
-```shell
-brew install protobuf
+In another terminal, call it with the client:
+
+```sh
+go run ./cmd/client -name Alice
 ```
 
-### Install the protocol compiler plugins for Go
+The client prints `Greeting: Hello Alice`. Use `-host` to target another server
+or `-host-header` to attach host metadata.
 
-```shell
-go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+## Check Changes
+
+Run the same core checks used by CI:
+
+```sh
+gofmt -w .
+go vet ./...
+go test -race ./...
+go build ./...
 ```
 
-### Update your PATH so that the protoc compiler can find the plugins
-```shell
+## Generate Protobuf Code
+
+Install [Protocol Buffers](https://protobuf.dev/installation/) and the pinned Go
+plugins:
+
+```sh
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.11
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.6.1
 export PATH="$PATH:$(go env GOPATH)/bin"
 ```
 
-### Generate code
-```shell
-protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative proto/hello.proto
+After changing the schema, regenerate and commit both generated files:
+
+```sh
+protoc --go_out=. --go_opt=paths=source_relative \
+  --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+  proto/hello.proto
 ```
 
-## Test locally
+Do not edit `proto/*.pb.go` directly.
 
-Run server
-```shell
-go run src/server.go
-```
+## Run With Docker
 
-On another terminal make gRPC call using client
-```shell
-go run src/client.go -host localhost:5050
-```
+Build both images:
 
-### Build images 
-Build client image
-```
-docker build --tag 10.24.9.10/dsql/rahil/grpc-go-client:v0.0.5 --file docker/ClientDockerfile .
+```sh
+docker build -t grpc-go-server:local -f docker/server/Dockerfile .
+docker build -t grpc-go-client:local -f docker/client/Dockerfile .
 ```
 
-Build server image
-```
-docker build --tag 10.24.9.10/dsql/rahil/grpc-go-server:v0.0.4 --file docker/ServerDockerFile .
+Create a network, start the server, and run the client:
+
+```sh
+docker network create grpc-go
+docker run --rm -d --name grpc-go-server --network grpc-go grpc-go-server:local
+docker run --rm --network grpc-go grpc-go-client:local \
+  -host grpc-go-server:5050 -name Alice
+docker stop grpc-go-server
+docker network rm grpc-go
 ```
 
-### Run on docker 
+## Run With kind
 
-Create a network
-```shell
-docker network create grpc
-```
+Build the images, load them into a running kind cluster, and apply the manifests:
 
-Run client container 
-```shell
-docker run -d --name grpc-client --network=grpc 10.24.9.10/dsql/rahil/grpc-go-client:v0.0.6
-```
-
-Run server container
-```shell
-docker run -d --name grpc-server --network=grpc 10.24.9.10/dsql/rahil/grpc-go-server:v0.0.5
+```sh
+kind load docker-image grpc-go-server:local grpc-go-client:local
+kubectl apply -f kubernetes/server.yaml -f kubernetes/server-svc.yaml
+kubectl apply -f kubernetes/client.yaml
+kubectl logs job/grpc-go-client
 ```
 
-Get Server IP
-```shell
-docker inspect grpc-server | grep "IPAddress"
-```
+Remove the example resources with `kubectl delete -f kubernetes/`.
 
-Exec into client container
-```shell
-docker exec -it 02b354b93a0819560bccca275d0017eca985525d02921158acd50cb46df04464 sh
-```
+## Contributing
 
-Call Server
-```shell
-./client -host 172.20.0.2:5050
-```
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening
+a pull request. For help, see [SUPPORT.md](SUPPORT.md). Report security concerns
+according to [SECURITY.md](SECURITY.md).
 
-### Run on kubernetes
+## License
 
-Push client image to harbor
-```
-docker push 10.24.9.10/dsql/rahil/grpc-go-client:v0.0.5
-```
-
-Push server image to harbor
-```
-docker push 10.24.9.10/dsql/rahil/grpc-go-server:v0.0.4
-```
-
-Create deployment, replicatset, services and pods on kubernetes
-```shell
-kubectl apply -f kubernetes
-```
-
-Exec to client pod
-```shell
-kubectl exec -n namespace pod/grpc-go-client-68bd85c465-bm6mx --stdin --tty -c grpc-go-client -- sh
-```
-
-Call server
-```
-/client -host grpc-go-server-svc:5050
-```
+Licensed under the [Apache License 2.0](LICENSE). The protobuf example retains
+the applicable copyright and license notice from the gRPC authors.

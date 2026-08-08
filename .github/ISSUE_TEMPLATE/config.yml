@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/rahilsh/grpc-go/security/advisories/new
+    about: Report security concerns privately
+  - name: gRPC community support
+    url: https://grpc.io/community/
+    about: Ask general questions about gRPC

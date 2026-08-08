@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: grpc-go-server
-          image: dockerhub.com/rahilr/grpc-go-server:v0.0.5
+          image: grpc-go-server:local
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5050
           resources:

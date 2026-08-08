@@ -1,4 +1,4 @@
-module rahilsh/grpc-go
+module github.com/rahilsh/grpc-go
 
 go 1.25.0
 
