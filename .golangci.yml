@@ -1,0 +1,33 @@
+version: "2"
+
+run:
+  timeout: 3m
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - misspell
+    - revive
+    - bodyclose
+    - errorlint
+  exclusions:
+    generated: lax
+    paths:
+      - \.pb\.go$
+    rules:
+      - path: _test\.go
+        linters:
+          - errcheck
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - \.pb\.go$

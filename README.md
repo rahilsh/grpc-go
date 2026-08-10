@@ -1,111 +1,118 @@
-# gRPC Go Hello World
+# golang-lab
 
-[![Go](https://github.com/rahilsh/grpc-go/actions/workflows/go.yml/badge.svg)](https://github.com/rahilsh/grpc-go/actions/workflows/go.yml)
+[![CI](https://github.com/rahilsh/golang-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/rahilsh/golang-lab/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-A small gRPC client and server written in Go, with Docker and Kubernetes examples.
+A single Go module (`github.com/rahilsh/golang-lab`, requires Go 1.25+) with a
+few small, self-contained example programs. The layout follows the official
+[Organizing a Go module](https://go.dev/doc/modules/layout) guidance: all
+binaries live in `cmd/`, private packages in `internal/`, and non-Go assets in
+their own top-level directories.
+
+## Layout
+
+```text
+cmd/
+  http-server/   # net/http server
+  http-client/   # HTTP client
+  grpc-server/   # gRPC greeter server
+  grpc-client/   # gRPC greeter client
+internal/
+  httpserver/    # HTTP routes, handlers, server setup (tested)
+  greeter/       # gRPC Greeter service implementation (tested)
+  greeterpb/     # generated protobuf/gRPC code
+proto/
+  hello.proto    # gRPC schema
+deploy/
+  http/          # HTTP Dockerfile
+  grpc/          # gRPC Dockerfiles and Kubernetes manifests
+```
+
+Install any command directly:
+
+```sh
+go install github.com/rahilsh/golang-lab/cmd/http-server@latest
+go install github.com/rahilsh/golang-lab/cmd/grpc-server@latest
+```
+
+## HTTP example
+
+```sh
+go run ./cmd/http-server                     # listens on :3000 (SERVER_ADDR)
+curl -i http://localhost:3000/               # 200: Hello world!
+curl -i http://localhost:3000/books          # 200: {"total":0,"count":0,"books":[]}
+go run ./cmd/http-client                      # GET CLIENT_URL (default jsonplaceholder)
+```
+
+| Variable      | Default                                        | Used by      |
+| ------------- | ---------------------------------------------- | ------------ |
+| `SERVER_ADDR` | `:3000`                                        | http-server  |
+| `CLIENT_URL`  | `https://jsonplaceholder.typicode.com/todos/1` | http-client  |
+
+## gRPC example
+
+```sh
+go run ./cmd/grpc-server                       # listens on :5050
+go run ./cmd/grpc-client -name Alice           # prints: Greeting: Hello Alice
+```
 
 > [!NOTE]
-> This is an unofficial learning project, not the official
+> The gRPC example is an unofficial learning project, not the official
 > [`grpc/grpc-go`](https://github.com/grpc/grpc-go) repository. It uses plaintext
-> transport for local demonstration and is not a production-ready service.
+> transport for local demonstration and is not production-ready.
 
-## Requirements
-
-- Go 1.25 or later
-- Docker (optional)
-- `kubectl` and a local cluster such as [kind](https://kind.sigs.k8s.io/) (optional)
-- `protoc` and its Go plugins, only when changing `proto/hello.proto`
-
-## Run Locally
-
-Start the server:
-
-```sh
-go run ./cmd/server
-```
-
-In another terminal, call it with the client:
-
-```sh
-go run ./cmd/client -name Alice
-```
-
-The client prints `Greeting: Hello Alice`. Use `-host` to target another server
-or `-host-header` to attach host metadata.
-
-## Check Changes
-
-Run the same core checks used by CI:
-
-```sh
-gofmt -w .
-go vet ./...
-go test -race ./...
-go build ./...
-```
-
-## Generate Protobuf Code
-
-Install [Protocol Buffers](https://protobuf.dev/installation/) and the pinned Go
-plugins:
+Regenerate protobuf code after editing `proto/hello.proto` (do not edit the
+generated files in `internal/greeterpb`):
 
 ```sh
 go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.11
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.6.1
 export PATH="$PATH:$(go env GOPATH)/bin"
+make proto
 ```
 
-After changing the schema, regenerate and commit both generated files:
+## Checks
+
+Run repository-wide from the root:
 
 ```sh
-protoc --go_out=. --go_opt=paths=source_relative \
-  --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-  proto/hello.proto
+make fmt vet test build lint
+# or directly:
+gofmt -w . && go vet ./... && go test -race -cover ./... && go build ./... && golangci-lint run
 ```
 
-Do not edit `proto/*.pb.go` directly.
+## Docker
 
-## Run With Docker
-
-Build both images:
+Images build from the repository root so they share the root `go.mod`/`go.sum`:
 
 ```sh
-docker build -t grpc-go-server:local -f docker/server/Dockerfile .
-docker build -t grpc-go-client:local -f docker/client/Dockerfile .
+make docker
+# or individually:
+docker build -t http-server:local -f deploy/http/Dockerfile .
+docker build -t grpc-server:local -f deploy/grpc/docker/server/Dockerfile .
+docker build -t grpc-client:local -f deploy/grpc/docker/client/Dockerfile .
 ```
 
-Create a network, start the server, and run the client:
+## Kubernetes (gRPC, via kind)
 
 ```sh
-docker network create grpc-go
-docker run --rm -d --name grpc-go-server --network grpc-go grpc-go-server:local
-docker run --rm --network grpc-go grpc-go-client:local \
-  -host grpc-go-server:5050 -name Alice
-docker stop grpc-go-server
-docker network rm grpc-go
-```
-
-## Run With kind
-
-Build the images, load them into a running kind cluster, and apply the manifests:
-
-```sh
-kind load docker-image grpc-go-server:local grpc-go-client:local
-kubectl apply -f kubernetes/server.yaml -f kubernetes/server-svc.yaml
-kubectl apply -f kubernetes/client.yaml
+kind load docker-image grpc-server:local grpc-client:local
+kubectl apply -f deploy/grpc/kubernetes/server.yaml -f deploy/grpc/kubernetes/server-svc.yaml
+kubectl apply -f deploy/grpc/kubernetes/client.yaml
 kubectl logs job/grpc-go-client
 ```
 
-Remove the example resources with `kubectl delete -f kubernetes/`.
+Remove the resources with `kubectl delete -f deploy/grpc/kubernetes/`.
 
 ## Contributing
 
-Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening
-a pull request. For help, see [SUPPORT.md](SUPPORT.md). Report security concerns
-according to [SECURITY.md](SECURITY.md).
+See [CONTRIBUTING](CONTRIBUTING.md), [SUPPORT](SUPPORT.md), and
+[SECURITY](SECURITY.md). Participation is governed by the
+[Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
-Licensed under the [Apache License 2.0](LICENSE). The protobuf example retains
-the applicable copyright and license notice from the gRPC authors.
+Licensed under the [Apache License 2.0](LICENSE). The HTTP example originated
+from the author's MIT-licensed `go-server` project and is redistributed here
+under Apache-2.0. The gRPC protobuf files retain their upstream gRPC
+Apache-2.0 notices.

@@ -11,7 +11,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: grpc-go-client
-          image: grpc-go-client:local
+          image: grpc-client:local
           imagePullPolicy: IfNotPresent
           args: ["-host", "grpc-go-server-svc:5050"]
           resources:

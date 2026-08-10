@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Check formatting
+        run: test -z "$(gofmt -l .)"
+
+      - name: Check module files
+        run: go mod tidy -diff
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: |
+          # Warm the coverage tool (covdata) serially first. Go builds it into
+          # the build cache on first use; running parallel coverage from a cold
+          # cache can exec the binary while another process is still writing it,
+          # causing a flaky "text file busy" (ETXTBSY) failure.
+          go test -cover ./internal/greeter >/dev/null
+          go test -race -cover ./...
+
+      - name: Build
+        run: go build ./...
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.12.2
+
+  docker:
+    name: Docker
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build HTTP server image
+        run: docker build -t http-server:ci -f deploy/http/Dockerfile .
+
+      - name: Build gRPC server image
+        run: docker build -t grpc-server:ci -f deploy/grpc/docker/server/Dockerfile .
+
+      - name: Build gRPC client image
+        run: docker build -t grpc-client:ci -f deploy/grpc/docker/client/Dockerfile .
