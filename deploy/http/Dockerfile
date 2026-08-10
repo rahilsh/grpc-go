@@ -4,7 +4,7 @@
 #   docker build -t http-server:local -f deploy/http/Dockerfile .
 
 # --- build stage ---
-FROM golang:1.25-alpine AS build
+FROM golang:1.26-alpine AS build
 WORKDIR /src
 
 COPY go.mod go.sum ./
