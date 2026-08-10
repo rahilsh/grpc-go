@@ -1,0 +1,21 @@
+.github/workflows/ci.yml
+  s_2dd422f93a55c5::t_376cf4eb6b80d8 40-46
+.golangci.yml
+  s_2dd422f93a55c5::t_359f3409774b4f 18-20,30-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "ad9e3c092360fa773cd3087f85ad31aeef425cb1",
+  "prompts": {},
+  "sessions": {
+    "s_2dd422f93a55c5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_014323c12ffepVDS0Agdh2RzZ1",
+        "model": "claude-opus-4.8"
+      },
+      "human_author": "Rahil Shaikh <rahilrshk@gmail.com>"
+    }
+  }
+}
