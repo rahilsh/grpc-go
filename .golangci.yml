@@ -15,6 +15,9 @@ linters:
     - bodyclose
     - errorlint
   exclusions:
+    generated: lax
+    paths:
+      - \.pb\.go$
     rules:
       - path: _test\.go
         linters:
@@ -24,3 +27,7 @@ formatters:
   enable:
     - gofmt
     - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - \.pb\.go$
