@@ -122,6 +122,107 @@ go run ./cmd/basics                    # lists available demos
 table-driven (inline and CSV-backed), and benchmark — live together in
 `internal/sqrt` and run via `go test ./internal/sqrt`.
 
+### `cmd/basics` — language fundamentals
+
+- **hello-world** — the minimal program: `fmt.Println` and a UTF-8 string literal.
+- **mean** — variables, `float64`, and `%v`/`%T` verbs; averages two numbers.
+- **if** — `if`/`else`, boolean operators (`&&`, `||`), and an `if` with an init
+  statement (`if frac := a / b; frac > 0.5`).
+- **switch** — an expression `switch` on a value and a tagless `switch` used as a
+  cleaner `if`/`else if` chain.
+- **loops** — Go's single loop keyword `for` in its C-style, `break`, `continue`,
+  and condition-only ("while") forms.
+- **fizzbuzz** — the classic exercise, implemented with a `switch`.
+- **strings** — immutability, byte indexing vs. slicing, concatenation, raw
+  (backtick) literals, and UTF-8.
+- **sprintf** — building a string with `fmt.Sprintf` instead of printing.
+- **even-ended-numbers** — nested loops plus string conversion to test whether a
+  number's first and last digit match.
+- **slices** — literals, `len`, indexing, sub-slicing, `range`, and `append`.
+- **slice-max** — iterating a slice to find its largest element.
+- **maps** — creation, lookup, the comma-ok idiom, set, `delete`, and `range`.
+- **word-count** — `strings.Fields` plus a `map[string]int` frequency counter.
+
+### `cmd/functions` — functions
+
+- **functions** — declaring functions and returning multiple values (`divmod`).
+- **function-parameters** — pass-by-value vs. slices (which share backing arrays)
+  vs. pointers, showing what a callee can and cannot mutate.
+- **returning-errors** — the `(value, error)` convention and checking `err`.
+- **defer** — deferred calls run in LIFO order as the function returns.
+- **content-type** — an HTTP `GET` that reads a response header and returns an
+  error when it is missing.
+
+### `cmd/types` — types & interfaces
+
+- **structs** — struct definitions, positional and named literals, the zero
+  value, and field access.
+- **receivers** — a pointer-receiver method (`Point.Move`) that mutates the value.
+- **methods** — a value method (`Trade.Value`) that computes derived data.
+- **constructor** — a `NewTrade` factory returning `(*Trade, error)` after
+  validating its input.
+- **embedded-structs** — composition: a `Square` holds a `Point` center and
+  forwards `Move` to it.
+- **interfaces** — a `Shape` interface implemented by `ShapeSquare` and `Circle`,
+  with `sumAreas` ranging over `[]Shape` polymorphically.
+- **io-writer** — implementing `io.Writer` (`Capper` upper-cases everything
+  written through it) so it composes with `fmt.Fprintln`.
+
+### `cmd/errors` — errors & panic
+
+- **custom-errors** — wrapping errors with `github.com/pkg/errors` and printing a
+  stack trace with `%+v`.
+- **panic-recover** — a deferred `recover` that turns an out-of-range panic into a
+  handled error.
+- **error-wrapping** — adding context as an error travels up the call chain.
+
+### `cmd/concurrency` — goroutines & channels
+
+- **goroutines** — launching goroutines and waiting for them with a
+  `sync.WaitGroup`.
+- **channels** — unbuffered send/receive and ranging over a channel until it is
+  closed.
+- **channel-content-type** — fan-out: one goroutine per URL, results collected
+  back over a channel.
+- **select** — waiting on multiple channels at once, including a timeout via
+  `time.After`.
+- **md5-concurrent** — worker goroutines hashing files and reporting results
+  through a channel.
+
+### `cmd/config` — configuration
+
+- Reads `config.toml` into a typed struct with `github.com/pelletier/go-toml`.
+
+### `cmd/web` — JSON & HTTP
+
+- **json** — decoding and encoding with `json.Decoder`/`Encoder`, using a `map`
+  for a dynamic response.
+- **http-get** — `GET` and `POST` with `net/http`, streaming the body via
+  `io.Copy`.
+- **github-api** — calling a REST API and decoding the JSON into a struct.
+- **httpd** — an HTTP server with handlers and a JSON request/response "math"
+  endpoint (blocks on `:8080`).
+- **kv-store** — an in-memory key/value HTTP server with a `sync.Mutex` and
+  path-based routing (blocks on `:8080`).
+
+### `cmd/database` — databases
+
+- **orm** — GORM CRUD: `AutoMigrate`, `Create`, `First`, `Update`, `Delete`.
+- **dao** — raw `database/sql`: open, `Ping`, `Query`, and `Scan` rows.
+- **region-splitter** — a TiDB PD API client that lists the largest regions and
+  `POST`s split operators for oversized ones.
+
+> [!NOTE]
+> The `web`, `database`, and network demos reach real services/ports and are
+> reference code; they compile and lint but need those services to run.
+
+### `internal/sqrt` — testing styles
+
+One package showing `TestSimple` (hand-written assertion), `TestMany`
+(table-driven, inline cases), `TestFromCSV` (table-driven from `sqrt_cases.csv`),
+and `BenchmarkSqrt`. Run with `go test ./internal/sqrt` or
+`go test -bench=. ./internal/sqrt`.
+
 ### Resources
 
 - LinkedIn Learning — Learning Go (course exercise files):
