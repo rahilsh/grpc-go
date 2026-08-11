@@ -7,6 +7,22 @@
 *.so
 *.dylib
 
+# Stray `go build ./cmd/<x>` outputs left in the repo root (build with -o bin/)
+/http-server
+/http-client
+/grpc-server
+/grpc-client
+/ping-server
+/ping-client
+/basics
+/functions
+/types
+/errors
+/concurrency
+/config
+/web
+/database
+
 # Test binary, built with `go test -c`
 *.test
 
