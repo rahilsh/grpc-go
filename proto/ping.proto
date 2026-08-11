@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "github.com/rahilsh/golang-lab/internal/pingpb;pingpb";
+
+package ping;
+
+// PingService demonstrates unary and bidirectional streaming RPCs.
+service PingService {
+  // Ping is a unary RPC that returns a single pong.
+  rpc Ping(Request) returns (Response) {}
+  // PingStream is a bidirectional streaming RPC that pongs every request.
+  rpc PingStream(stream Request) returns (stream Response) {}
+}
+
+// Request is a ping message.
+message Request {
+  string msg = 1;
+}
+
+// Response is a pong message.
+message Response {
+  string msg = 1;
+}

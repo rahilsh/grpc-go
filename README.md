@@ -17,12 +17,27 @@ cmd/
   http-client/   # HTTP client
   grpc-server/   # gRPC greeter server
   grpc-client/   # gRPC greeter client
+  ping-server/   # streaming gRPC ping server
+  ping-client/   # streaming gRPC ping client
+  basics/        # language basics examples (-demo)
+  functions/     # functions examples (-demo)
+  types/         # types & interfaces examples (-demo)
+  errors/        # errors & panic examples (-demo)
+  concurrency/   # goroutines & channels examples (-demo)
+  config/        # TOML configuration example
+  web/           # JSON/HTTP examples (-demo)
+  database/      # GORM, database/sql, and TiDB utilities (-demo)
 internal/
   httpserver/    # HTTP routes, handlers, server setup (tested)
   greeter/       # gRPC Greeter service implementation (tested)
   greeterpb/     # generated protobuf/gRPC code
+  pingserver/    # streaming PingService implementation
+  pingpb/        # generated protobuf/gRPC code
+  sqrt/          # simple, table-driven, and benchmark test examples (tested)
+  demo/          # tiny -demo dispatcher shared by the example binaries
 proto/
-  hello.proto    # gRPC schema
+  hello.proto    # gRPC greeter schema
+  ping.proto     # gRPC streaming schema
 deploy/
   http/          # HTTP Dockerfile
   grpc/          # gRPC Dockerfiles and Kubernetes manifests
@@ -61,8 +76,8 @@ go run ./cmd/grpc-client -name Alice           # prints: Greeting: Hello Alice
 > [`grpc/grpc-go`](https://github.com/grpc/grpc-go) repository. It uses plaintext
 > transport for local demonstration and is not production-ready.
 
-Regenerate protobuf code after editing `proto/hello.proto` (do not edit the
-generated files in `internal/greeterpb`):
+Regenerate protobuf code after editing `proto/hello.proto` or `proto/ping.proto`
+(do not edit the generated files in `internal/greeterpb` or `internal/pingpb`):
 
 ```sh
 go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.11
@@ -70,6 +85,53 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.6.1
 export PATH="$PATH:$(go env GOPATH)/bin"
 make proto
 ```
+
+## Streaming gRPC example
+
+`PingService` demonstrates a bidirectional streaming RPC (`PingStream`) alongside
+a unary `Ping`:
+
+```sh
+go run ./cmd/ping-server                       # listens on :8080
+go run ./cmd/ping-client -msg ping -count 3    # unary + streamed pongs
+```
+
+## Learning examples
+
+Snippets collected while learning Go are grouped into a few runnable command
+binaries by topic. Each bundles several demos selected with a `-demo` flag; run
+without the flag to list what's available:
+
+```sh
+go run ./cmd/basics -demo fizzbuzz
+go run ./cmd/concurrency -demo select
+go run ./cmd/basics                    # lists available demos
+```
+
+| Command | Demos (`-demo`) |
+| ------- | --------------- |
+| `basics` | `hello-world`, `mean`, `if`, `switch`, `loops`, `fizzbuzz`, `strings`, `sprintf`, `even-ended-numbers`, `slices`, `slice-max`, `maps`, `word-count` |
+| `functions` | `functions`, `function-parameters`, `returning-errors`, `defer`, `content-type` |
+| `types` | `structs`, `receivers`, `methods`, `constructor`, `embedded-structs`, `interfaces`, `io-writer` |
+| `errors` | `custom-errors`, `panic-recover`, `error-wrapping` |
+| `concurrency` | `goroutines`, `channels`, `channel-content-type`, `select`, `md5-concurrent` |
+| `web` | `json`, `http-get`, `github-api`, `httpd`, `kv-store` |
+| `database` | `orm` (GORM), `dao` (`database/sql`), `region-splitter` (TiDB PD) |
+
+`cmd/config` (single program) reads a TOML file. Testing patterns — simple,
+table-driven (inline and CSV-backed), and benchmark — live together in
+`internal/sqrt` and run via `go test ./internal/sqrt`.
+
+### Resources
+
+- LinkedIn Learning — Learning Go (course exercise files):
+  <https://github.com/LinkedInLearning/learning-go-2875237>
+- Go design patterns:
+  <https://github.com/AgarwalConsulting/Go-Training/tree/master/patterns/design>
+  ([slides](https://go-design-patterns.slides.algogrit.com/))
+- [Effective Go](https://golang.org/doc/effective_go) ·
+  [Code Review Comments](https://github.com/golang/go/wiki/CodeReviewComments)
+- Dave Cheney — [SOLID Go Design](https://dave.cheney.net/2016/08/20/solid-go-design)
 
 ## Checks
 

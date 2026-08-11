@@ -1,4 +1,4 @@
-.PHONY: build run-http run-http-client run-grpc run-grpc-client test test-cover lint vet fmt tidy proto clean docker
+.PHONY: build run-http run-http-client run-grpc run-grpc-client run-ping run-ping-client test test-cover lint vet fmt tidy proto clean docker
 
 BINDIR := bin
 
@@ -7,6 +7,8 @@ build: ## Build all binaries
 	go build -o $(BINDIR)/http-client ./cmd/http-client
 	go build -o $(BINDIR)/grpc-server ./cmd/grpc-server
 	go build -o $(BINDIR)/grpc-client ./cmd/grpc-client
+	go build -o $(BINDIR)/ping-server ./cmd/ping-server
+	go build -o $(BINDIR)/ping-client ./cmd/ping-client
 
 run-http: ## Run the HTTP server
 	go run ./cmd/http-server
@@ -19,6 +21,12 @@ run-grpc: ## Run the gRPC server
 
 run-grpc-client: ## Run the gRPC client
 	go run ./cmd/grpc-client -name Alice
+
+run-ping: ## Run the streaming gRPC ping server
+	go run ./cmd/ping-server
+
+run-ping-client: ## Run the streaming gRPC ping client
+	go run ./cmd/ping-client -msg ping
 
 test: ## Run tests
 	go test -race ./...
@@ -39,10 +47,10 @@ fmt: ## Format code
 tidy: ## Tidy go.mod
 	go mod tidy
 
-proto: ## Regenerate protobuf code from proto/hello.proto
+proto: ## Regenerate protobuf code from proto/*.proto
 	protoc --go_out=. --go_opt=module=github.com/rahilsh/golang-lab \
 	       --go-grpc_out=. --go-grpc_opt=module=github.com/rahilsh/golang-lab \
-	       proto/hello.proto
+	       proto/hello.proto proto/ping.proto
 
 clean: ## Remove build artifacts
 	rm -rf $(BINDIR) coverage.out
